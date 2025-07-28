@@ -1,3 +1,10 @@
+import Logo from './assets/logo.png'
+import entradaBackground from './assets/entrada.jpeg'
+import interior from './assets/interiormariaflor.png'
+import buque from './assets/bluetterflies.png'
+import evento from './assets/evento.png'
+import vaso from './assets/vasojardim.png'
+
 function App() {
 
   return (
@@ -5,7 +12,9 @@ function App() {
       {/* Header */}
       <header className="fixed w-full bg-white/80 backdrop-blur-md shadow-md z-20">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-serif font-bold">Maria Flor</h1>
+          <h1 className="text-2xl font-serif font-bold">
+            <img className="h-16 w-auto" src={Logo} />
+          </h1>
           <nav className="space-x-6 text-green-700 font-medium">
             <a href="#hero" className="hover:text-green-900">Home</a>
             <a href="#sobre" className="hover:text-green-900">Sobre</a>
@@ -20,22 +29,16 @@ function App() {
       <section
         id="hero"
         className="w-full relative flex items-center justify-center h-screen bg-cover bg-center"
-        style={{ backgroundImage: "url('/src/assets/entrada.jpeg')" }}
+        style={{ backgroundImage: `url(${entradaBackground})` }}
       >
         <div className="absolute inset-0 bg-green-900/50"></div>
         <div className="relative text-center px-6">
           <h2 className="text-5xl md:text-6xl font-serif font-bold text-white drop-shadow-lg mb-4">
-            Seu Jardim de Encantos
+            Maria Flor
           </h2>
           <p className="text-lg md:text-xl text-green-100 mb-8 drop-shadow">
             Flores frescas e arranjos personalizados para todas as ocasiões
           </p>
-          <a
-            href="#contato"
-            className="inline-block px-8 py-3 bg-green-500 text-white font-medium rounded-full hover:bg-green-600 transition-shadow shadow-md"
-          >
-            Fale Conosco
-          </a>
         </div>
       </section>
 
@@ -43,7 +46,7 @@ function App() {
       <section id="sobre" className="w-full bg-white py-20">
         <div className="flex flex-col md:flex-row justify-center items-center gap-8">
           <img
-            src="src/assets/interiormariaflor.png"
+            src={interior}
             alt="Interior da floricultura"
             className="w-full md:w-1/3 max-w-sm rounded-lg shadow-lg"
           />
@@ -66,17 +69,17 @@ function App() {
           <h3 className="text-3xl font-serif font-bold text-green-800 mb-8">Nossos Serviços</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
-              <img src="src/assets/bluetterflies.png" alt="Buquê" className="rounded mb-4" />
+              <img src={buque} alt="Buquê" className="rounded mb-4" />
               <h4 className="text-xl font-medium text-green-700 mb-2">Buquês Personalizados</h4>
               <p className="text-green-600">Crie o buquê ideal com flores frescas e cores à sua escolha.</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
-              <img src="/src/assets/evento.png" alt="Evento" className="rounded mb-4" />
+              <img src={evento} alt="Evento" className="rounded mb-4" />
               <h4 className="text-xl font-medium text-green-700 mb-2">Decoração de Eventos</h4>
               <p className="text-green-600">Traga elegância e perfume para casamentos, festas e confraternizações.</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
-              <img src="/src/assets/vasojardim.png" alt="Plantas" className="rounded mb-4" />
+              <img src={vaso} alt="Plantas" className="rounded mb-4" />
               <h4 className="text-xl font-medium text-green-700 mb-2">Plantas & Jardinagem</h4>
               <p className="text-green-600">Seleção de plantas ornamentais e dicas de cultivo para seu espaço verde.</p>
             </div>
