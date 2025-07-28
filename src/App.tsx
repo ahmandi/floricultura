@@ -20,7 +20,7 @@ function App() {
       <section
         id="hero"
         className="w-full relative flex items-center justify-center h-screen bg-cover bg-center"
-        style={{ backgroundImage: "url('https://source.unsplash.com/1920x1080/?floral,flowers')" }}
+        style={{ backgroundImage: "url('/src/assets/entrada.jpeg')" }}
       >
         <div className="absolute inset-0 bg-green-900/50"></div>
         <div className="relative text-center px-6">
