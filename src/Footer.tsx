@@ -2,18 +2,16 @@ import { Mail, Phone, MapPin, Instagram } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#5b6940] text-white py-10 px-6 md:px-16">
+    <footer className="bg-[#175D49] text-white py-10 px-6 md:px-16">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Institucional */}
         <div>
           <h3 className="font-semibold text-lg mb-4">INSTITUCIONAL</h3>
           <ul className="space-y-2 text-sm">
             <li><a href="#" className="hover:underline">Sobre a Empresa</a></li>
-            <li><a href="#" className="hover:underline">Nossos Produtos</a></li>
             <li><a href="#" className="hover:underline">Política de Privacidade</a></li>
             <li><a href="#" className="hover:underline">Política de Segurança</a></li>
             <li><a href="#" className="hover:underline">Política de Garantia</a></li>
-            <li><a href="#" className="hover:underline">Política de Envio</a></li>
           </ul>
         </div>
 
