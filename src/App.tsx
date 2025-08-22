@@ -1,26 +1,68 @@
-import Logo from './assets/logo.png'
+import Logo from './assets/logo-sm.png'
 import entradaBackground from './assets/entrada.jpeg'
 import interior from './assets/interiormariaflor.png'
 import buque from './assets/bluetterflies.png'
-import evento from './assets/evento.png'
 import vaso from './assets/vasojardim.png'
+import evento from './assets/evento.png'
+import bannerNoiva from './assets/3-min.png'
+
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
+
+import ContactIcon from './assets/contact.svg';
+
+import '../node_modules/swiper/swiper.min.css';
+import Footer from './Footer'
 
 function App() {
 
   return (
     <div className="min-h-screen flex flex-col font-sans text-green-900">
+
       {/* Header */}
       <header className="fixed w-full bg-white/80 backdrop-blur-md shadow-md z-20">
-        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-serif font-bold">
-            <img className="h-16 w-auto" src={Logo} />
-          </h1>
-          <nav className="space-x-6 text-green-700 font-medium">
-            <a href="#hero" className="hover:text-green-900">Home</a>
-            <a href="#sobre" className="hover:text-green-900">Sobre</a>
-            <a href="#servicos" className="hover:text-green-900">Serviços</a>
-            <a href="#localizacao" className="hover:text-green-900">Localização</a>
-            <a href="#contato" className="hover:text-green-900">Contato</a>
+        
+        <div
+          className="w-full"
+          style={{ backgroundColor: "#175D49" }}
+        >
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-around items-center gap-4 py-2 text-white text-sm font-medium">
+            <div className="flex items-center gap-2">
+              <span role="img" aria-label="truck">🚚</span>
+              <span className="">Entrega expressa: entrega até as 18h</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span role="img" aria-label="card" className="mb-[1px]">💳</span>
+              <span>Parcelamento em até 2x sem juros</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span role="img" aria-label="shield">📱</span>
+              <span className="">Compras também pelo WhatsApp</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <div className="container mx-auto px-6 py-2 flex justify-between items-center">
+          <nav className="flex justify-around items-center w-full space-x-6 text-green-700 font-medium">
+            <div className="">
+              <img className="h-16 w-auto" src={Logo} />
+            </div>
+            <div className='flex gap-12 text-lg'>
+              <a href="#hero" className="hover:text-green-900">Home</a>
+              <a href="#sobre" className="hover:text-green-900">Sobre</a>
+              <a href="#servicos" className="hover:text-green-900">Serviços</a>
+              <a href="#localizacao" className="hover:text-green-900">Localização</a>
+            </div>
+            <a href="#contato" className="hover:text-green-900 flex items-center gap-1">
+              {/* Ícone headset SAC */}
+              <img src={ContactIcon} alt="Contato" className="h-10 w-10 inline-block" />
+              <div className='flex flex-col'>
+                <span>Atendimento</span>
+                <span>(31) 99696-4905</span>
+              </div>
+            </a>
           </nav>
         </div>
       </header>
@@ -29,29 +71,89 @@ function App() {
       <section
         id="hero"
         className="w-full relative flex items-center justify-center h-screen bg-cover bg-center"
-        style={{ backgroundImage: `url(${entradaBackground})` }}
       >
-        <div className="absolute inset-0 bg-green-900/50"></div>
-        <div className="relative text-center px-6">
-          <h2 className="text-5xl md:text-6xl font-serif font-bold text-white drop-shadow-lg mb-4">
-            Maria Flor
-          </h2>
-          <p className="text-lg md:text-xl text-green-100 mb-8 drop-shadow">
-            Flores frescas e arranjos personalizados para todas as ocasiões
-          </p>
+        <Swiper
+          modules={[Pagination]}
+          pagination={{ clickable: true }}
+          loop={true}
+          className="absolute inset-0 h-full w-full"
+        >
+          <SwiperSlide>
+            <img
+              src={entradaBackground}
+              alt="Entrada"
+              className="object-cover w-full h-full"
+            />
+            {/*
+            <div className="absolute inset-0 bg-green-900/50"></div>
+             <div className="relative text-center px-6 z-10">
+              <h2 className="text-5xl md:text-6xl font-serif font-bold text-white drop-shadow-lg mb-4">
+                Maria Flor
+              </h2>
+              <p className="text-lg md:text-xl text-green-100 mb-8 drop-shadow">
+                Flores frescas e arranjos personalizados para todas as ocasiões
+              </p>
+            </div> */}
+          </SwiperSlide>
+          <SwiperSlide>
+            <img
+              src={interior}
+              alt="Interior"
+              className="object-cover w-full h-full"
+            />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img
+              src={bannerNoiva}
+              alt="Banner Noiva"
+              className="object-cover w-full h-full"
+            />
+          </SwiperSlide>
+        </Swiper>
+      </section>
+
+      {/* Serviços Section */}
+      <section id="servicos" className="w-full bg-green-50 py-20">
+        <div className="container mx-auto px-6 text-center">
+          <div className='flex flex-row items-center mb-12 gap-4'>
+            <img className="h-16 w-auto" src={Logo} />
+            <h3 className="text-3xl font-serif font-bold text-green-800">Nossos Serviços</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className=" p-6 rounded-lg shadow hover:shadow-lg transition">
+              <img src={buque} alt="Buquê" className="rounded mb-4" />
+              <h4 className="text-xl font-medium text-green-700 mb-2">Buquês Personalizados</h4>
+              <p className="text-green-600">Crie o buquê ideal com flores frescas e cores à sua escolha.</p>
+            </div>
+            <div className=" p-6 rounded-lg shadow hover:shadow-lg transition">
+              <img src={evento} alt="Evento" className="rounded mb-4" />
+              <h4 className="text-xl font-medium text-green-700 mb-2">Decoração de Eventos</h4>
+              <p className="text-green-600">Traga elegância e perfume para casamentos, festas e confraternizações.</p>
+            </div>
+            <div className=" p-6 rounded-lg shadow hover:shadow-lg transition">
+              <img src={vaso} alt="Plantas" className="rounded mb-4" />
+              <h4 className="text-xl font-medium text-green-700 mb-2">Plantas & Jardinagem</h4>
+              <p className="text-green-600">Seleção de plantas ornamentais e dicas de cultivo para seu espaço verde.</p>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Sobre Section */}
-      <section id="sobre" className="w-full bg-white py-20">
+      <section id="sobre" className="w-full  py-20">
+        <div className='container mx-auto px-6 text-center'>
+          <div className='flex flex-row items-center mb-12 gap-4'>
+            <img className="h-16 w-auto" src={Logo} />
+            <h3 className="text-3xl font-serif font-bold text-green-800">Sobre Nós</h3>
+          </div>
+        </div>
         <div className="flex flex-col md:flex-row justify-center items-center gap-8">
           <img
             src={interior}
             alt="Interior da floricultura"
             className="w-full md:w-1/3 max-w-sm rounded-lg shadow-lg"
           />
-          <div className="md:w-1/2">
-            <h3 className="text-3xl font-serif font-bold text-green-800 mb-4">Sobre Nós</h3>
+            <div className="md:w-1/2">
             <p className="text-green-700 leading-relaxed mb-4">
               Na Maria Flor, dedicamo-nos a transformar momentos em memórias inesquecíveis. Com flores selecionadas
               diariamente e arranjos artesanais, oferecemos o toque perfeito para celebrar amor, amizade e conquistas.
@@ -63,33 +165,16 @@ function App() {
         </div>
       </section>
 
-      {/* Serviços Section */}
-      <section id="servicos" className="w-full bg-green-50 py-20">
-        <div className="container mx-auto px-6 text-center">
-          <h3 className="text-3xl font-serif font-bold text-green-800 mb-8">Nossos Serviços</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
-              <img src={buque} alt="Buquê" className="rounded mb-4" />
-              <h4 className="text-xl font-medium text-green-700 mb-2">Buquês Personalizados</h4>
-              <p className="text-green-600">Crie o buquê ideal com flores frescas e cores à sua escolha.</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
-              <img src={evento} alt="Evento" className="rounded mb-4" />
-              <h4 className="text-xl font-medium text-green-700 mb-2">Decoração de Eventos</h4>
-              <p className="text-green-600">Traga elegância e perfume para casamentos, festas e confraternizações.</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
-              <img src={vaso} alt="Plantas" className="rounded mb-4" />
-              <h4 className="text-xl font-medium text-green-700 mb-2">Plantas & Jardinagem</h4>
-              <p className="text-green-600">Seleção de plantas ornamentais e dicas de cultivo para seu espaço verde.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <div className='container mx-auto px-6 text-center'>
+        <img src={bannerNoiva} alt="Logo Maria Flor" className="mx-auto my-8 h-auto w-auto" />
+      </div>
 
       {/* Localização Section */}
       <section id="localizacao" className="container mx-auto px-6 py-20">
-        <h3 className="text-3xl font-serif font-bold text-green-800 mb-6 text-center">Como Chegar</h3>
+        <div className='flex flex-row items-center mb-12 gap-4'>
+          <img className="h-16 w-auto" src={Logo} />
+          <h3 className="text-3xl font-serif font-bold text-green-800">Como Chegar</h3>
+        </div>
         <div className="aspect-video rounded-lg shadow">
           <iframe
             title="Mapa da Floricultura"
@@ -100,45 +185,8 @@ function App() {
         </div>
       </section>
 
-      {/* Contato Section */}
-      <section id="contato" className="bg-green-100 py-20">
-        <div className="container mx-auto px-6 text-center">
-          <h3 className="text-3xl font-serif font-bold text-green-800 mb-4">Entre em Contato</h3>
-          <p className="text-green-700 mb-6">Estamos prontos para ouvir você! Envie uma mensagem ou fale no WhatsApp.</p>
-          <div className="flex items-center justify-center gap-3">
-            <a
-              href="https://wa.me/5531996964905?text=Olá%20Floricultura%20Maria%20Flor!"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block px-4 py-4 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 transition"
-            >
-              Chat no WhatsApp
-            </a>
-
-            <a
-              href="https://www.instagram.com/mariaflor_ipatinga/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block px-4 py-4 bg-white text-green-600 rounded-full hover:bg-green-200 transition"
-              aria-label="Instagram"
-            >
-              {/* Instagram Icon */}
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5z"/>
-                <path d="M12 7a5 5 0 1 1 0 10a5 5 0 0 1 0-10zm0 1.5a3.5 3.5 0 1 0 0 7a3.5 3.5 0 0 0 0-7z"/>
-                <circle cx="17.5" cy="6.5" r="1.5"/>
-              </svg>
-            </a>
-          </div>
-        </div>
-      </section>
-
       {/* Footer */}
-      <footer className="bg-green-900 text-green-100 py-6">
-        <div className="container mx-auto px-6 text-center">
-          <p>&copy; {new Date().getFullYear()} Maria Flor. Todos os direitos reservados.</p>
-        </div>
-      </footer>
+      <Footer/>
     </div>
   );
 }
