@@ -41,7 +41,7 @@ export default function Footer() {
               Centro, Ipatinga - MG, 35160-002
             </li>
             <li>
-              <a href="#" className="inline-block hover:opacity-80">
+              <a href="https://www.instagram.com/mariaflor_ipatinga/" className="inline-block hover:opacity-80">
                 <Instagram size={20} />
               </a>
             </li>
