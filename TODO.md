@@ -1,0 +1,4 @@
+# TODO
+
+- Adicionar caneca
+- Internacionalizaçao
