@@ -102,6 +102,9 @@ function App() {
   const heroImgRef = useRef(null)
   const noivaImgRef = useRef(null)
   const buqueImgRef = useRef(null)
+  const mensagem = encodeURIComponent(
+          "Olá! Vim pelo site da floricultura e gostaria de realizar um pedido."
+        );
 
   useScrollReveal()
 
@@ -528,9 +531,14 @@ function App() {
                   </a>
                 </div>
               </div>
-              <a href="https://wa.me/5531996964905" className="btn-elegant inline-block mt-10">
-                Fale no WhatsApp
-              </a>
+            <a
+              href={`https://wa.me/5531996964606?text=${mensagem}`}
+              className="btn-elegant inline-block mt-10"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Fale no WhatsApp
+            </a>
             </div>
 
             <div className="reveal-right">
