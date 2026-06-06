@@ -570,9 +570,14 @@ function App() {
             Entre em contato e vamos criar juntas o arranjo perfeito
             para o seu momento especial.
           </p>
-          <a href="https://wa.me/5531996964905" className="reveal delay-3 btn-elegant btn-elegant-light">
-            Fale conosco no WhatsApp
-          </a>
+            <a
+              href={`https://wa.me/5531996964606?text=${mensagem}`}
+              className="btn-elegant inline-block mt-10"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Fale no WhatsApp
+            </a>
         </div>
       </section>
 
