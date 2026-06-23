@@ -532,7 +532,7 @@ function App() {
                 </div>
               </div>
             <a
-              href={`https://wa.me/5531996964606?text=${mensagem}`}
+              href={`https://wa.me/553196964905?text=${mensagem}`}
               className="btn-elegant inline-block mt-10"
               target="_blank"
               rel="noopener noreferrer"
@@ -571,7 +571,7 @@ function App() {
             para o seu momento especial.
           </p>
             <a
-              href={`https://wa.me/5531996964606?text=${mensagem}`}
+              href={`https://wa.me/553196964905?text=${mensagem}`}
               className="btn-elegant inline-block mt-10"
               target="_blank"
               rel="noopener noreferrer"
