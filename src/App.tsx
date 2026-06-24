@@ -20,6 +20,14 @@ import { Menu, X, Instagram, Phone, MapPin, Mail, ArrowUp, ChevronDown } from 'l
 
 import Footer from './Footer'
 
+function WhatsAppIcon({ size = 28 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 448 512" fill="currentColor" aria-hidden="true">
+      <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 110.7L8 480l117.7-30.9c32 17.5 68.1 26.7 104.9 26.7h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-74.9-156.7zM223.9 438.6c-32.7 0-64.6-8.8-92.3-25.4l-6.6-3.9-68.7 18 18.3-66.9-4.3-6.9c-18.2-29-27.8-62.5-27.8-96.9 0-100.4 81.7-182.1 182.5-182.1 48.8 0 94.6 19 129.1 53.6 34.5 34.5 56 80.3 55.9 129.1-.1 100.4-83.9 181.5-184.1 181.5zm101-135.7c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.7-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.4-9.7-1.3-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.6 19.2-19.6 46.8 0 27.6 20 54.3 22.8 58 2.8 3.7 38.5 58.8 93.4 80.2 46.5 18 56 14.4 66.1 13.5 10.1-.9 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.4-5-3.8-10.5-6.6z" />
+    </svg>
+  )
+}
+
 function useScrollReveal() {
   useEffect(() => {
     const elements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale')
@@ -583,10 +591,21 @@ function App() {
 
       <Footer />
 
+      {/* ═══ WhatsApp Flutuante ═══ */}
+      <a
+        href={`https://wa.me/553196964905?text=${mensagem}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Fale no WhatsApp"
+        className="fixed bottom-6 right-6 z-40 p-4 rounded-full bg-[#25D366] text-white shadow-lg transition-all duration-300 hover:bg-[#1ebd5a] hover:scale-110"
+      >
+        <WhatsAppIcon size={28} />
+      </a>
+
       {/* ═══ Back to Top ═══ */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className={`fixed bottom-8 right-8 z-30 p-3 rounded-full bg-green-800 text-white shadow-lg transition-all duration-500 hover:bg-green-700 ${scrolled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}
+        className={`fixed bottom-24 right-8 z-30 p-3 rounded-full bg-green-800 text-white shadow-lg transition-all duration-500 hover:bg-green-700 ${scrolled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}
       >
         <ArrowUp size={18} strokeWidth={1.5} />
       </button>
