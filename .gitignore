@@ -12,6 +12,8 @@ dist
 # vídeos brutos (acima do limite de 100 MB do GitHub); o site usa src/assets/hero.mp4/.webm
 *.mov
 *.MOV
+# fotos em tamanho original; o site usa as versões reduzidas em src/assets
+fotos-originais/
 dist-ssr
 *.local
 

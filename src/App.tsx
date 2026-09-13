@@ -1,25 +1,52 @@
 import { useEffect, useRef, useState } from 'react'
-import Logo from './assets/logo-sm.png'
-import entradaBackground from './assets/entrada.jpeg'
+import Logo from './assets/logo-sm.webp'
 import fachada from './assets/fachada.jpg'
-import buque from './assets/bluetterflies.png'
+import buque from './assets/bluetterflies.jpg'
 import buquePersonalizado from './assets/buque_personalizado.jpg'
-import vaso from './assets/vasojardim.png'
-import jardinagem from './assets/jardinagem.jpg'
-import evento from './assets/evento.png'
-import cesta1 from './assets/cesta_1.jpg'
-import cesta2 from './assets/cesta_2.jpg'
-import cesta3 from './assets/cesta_3.jpg'
-import cesta4 from './assets/cesta_4.jpg'
-import bannerNoiva from './assets/buquenoiva.png'
+import jardinagem from './assets/flor_8.jpg'
+import cesta from './assets/cesta_3.jpg'
+import bannerNoiva from './assets/buquenoiva.jpg'
 import heroVideoMp4 from './assets/hero.mp4'
+import heroVideoMobile from './assets/hero-mobile.mp4'
 import heroPoster from './assets/hero-poster.jpg'
 import logoVideo from './assets/logo_video_svg.svg'
 
-import { Menu, X, Instagram, Phone, MapPin, Mail, ArrowUp, ChevronDown } from 'lucide-react'
+import { Menu, X, Instagram, Phone, MapPin, Mail, ArrowUp, ChevronDown, Truck } from 'lucide-react'
+
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Autoplay } from 'swiper/modules'
+import 'swiper/css'
 
 import Footer from './Footer'
-import AutoCarousel from './AutoCarousel'
+import PanImage from './PanImage'
+
+// Catálogo: cada categoria carrega todas as fotos com o prefixo, em ordem numérica (buques_2 antes de buques_10)
+const toGallery = (files: Record<string, string>) =>
+  Object.entries(files)
+    .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
+    .map(([, src]) => src)
+
+const catalogoCategorias = [
+  {
+    nome: 'Buquês',
+    fotos: toGallery(import.meta.glob<string>('./assets/buques_*.jpg', { eager: true, import: 'default' })),
+  },
+  {
+    nome: 'Flores e Vasos',
+    fotos: toGallery({
+      ...import.meta.glob<string>('./assets/flor_*.jpg', { eager: true, import: 'default' }),
+      ...import.meta.glob<string>('./assets/vaso_*.jpg', { eager: true, import: 'default' }),
+    }),
+  },
+  {
+    nome: 'Presentes',
+    fotos: toGallery(import.meta.glob<string>('./assets/presente_*.jpg', { eager: true, import: 'default' })),
+  },
+  {
+    nome: 'Cestas',
+    fotos: toGallery(import.meta.glob<string>('./assets/cesta_*.jpg', { eager: true, import: 'default' })),
+  },
+]
 
 function WhatsAppIcon({ size = 28 }) {
   return (
@@ -70,14 +97,14 @@ function MobileMenu({ isOpen, onClose }) {
     { label: 'Home', href: '#hero' },
     { label: 'Sobre', href: '#sobre' },
     { label: 'Serviços', href: '#servicos' },
-    { label: 'Portfólio', href: '#portfolio' },
+    { label: 'Catálogo', href: '#catalogo' },
     { label: 'Localização', href: '#localizacao' },
     { label: 'Contato', href: '#contato' },
   ]
 
   return (
     <div className={`menu-overlay fixed inset-0 z-50 bg-green-900/95 backdrop-blur-md flex flex-col items-center justify-center ${isOpen ? 'open' : ''}`}>
-      <button onClick={onClose} className="absolute top-8 right-8 text-white hover:opacity-70 transition">
+      <button onClick={onClose} aria-label="Fechar menu" className="absolute top-8 right-8 text-white hover:opacity-70 transition">
         <X size={28} strokeWidth={1} />
       </button>
       <nav className="flex flex-col items-center gap-8">
@@ -94,14 +121,124 @@ function MobileMenu({ isOpen, onClose }) {
         ))}
       </nav>
       <div className="absolute bottom-12 flex gap-6 text-white/60">
-        <a href="https://www.instagram.com/mariaflor_ipatinga/" className="hover:text-white transition">
+        <a href="https://www.instagram.com/mariaflor_ipatinga/" aria-label="Instagram da Maria Flor" className="hover:text-white transition">
           <Instagram size={20} strokeWidth={1} />
         </a>
-        <a href="https://wa.me/5531996964905" className="hover:text-white transition">
+        <a href="https://wa.me/5531996964905" aria-label="WhatsApp da Maria Flor" className="hover:text-white transition">
           <Phone size={20} strokeWidth={1} />
         </a>
       </div>
     </div>
+  )
+}
+
+const CATALOGO_ROWS = 3
+// Abaixo disso (por fileira), dividir a categoria deixaria fileiras com uma ou duas fotos repetidas
+const MIN_PHOTOS_PER_ROW = 4
+const CATEGORY_INTERVAL = 7000
+// O Swiper em loop precisa de slides suficientes para cobrir a largura; fileiras curtas repetem as fotos
+const MIN_SLIDES = 8
+
+function CatalogoRow({ title, photos, reverse = false }: { title: string; photos: string[]; reverse?: boolean }) {
+  const slides = [...photos]
+  while (slides.length < MIN_SLIDES) slides.push(...photos)
+
+  return (
+    <div className="catalogo-fade mt-8 first:mt-0">
+      <Swiper
+        modules={[Autoplay]}
+        slidesPerView="auto"
+        spaceBetween={16}
+        loop
+        grabCursor
+        speed={800}
+        autoplay={{ delay: 3500, disableOnInteraction: false, pauseOnMouseEnter: true, reverseDirection: reverse }}
+      >
+        {slides.map((src, i) => (
+          <SwiperSlide key={`${i}-${src}`} className="!w-64 md:!w-80">
+            <PanImage
+              src={src}
+              alt={`${title} ${(i % photos.length) + 1}`}
+              loading="lazy"
+              className="block w-full h-[360px] md:h-[450px] rounded-sm"
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
+  )
+}
+
+function Catalogo() {
+  const [active, setActive] = useState(0)
+  const [autoRotate, setAutoRotate] = useState(true)
+  const [hovering, setHovering] = useState(false)
+
+  // Troca a categoria sozinha; pausa com o mouse sobre as fotos e para de vez quando a pessoa interage
+  useEffect(() => {
+    if (!autoRotate || hovering) return
+    const id = setInterval(() => {
+      if (!document.hidden) setActive((i) => (i + 1) % catalogoCategorias.length)
+    }, CATEGORY_INTERVAL)
+    return () => clearInterval(id)
+  }, [autoRotate, hovering])
+
+  const categoria = catalogoCategorias[active]
+  const { fotos } = categoria
+  // Com fotos suficientes, cada fileira recebe fotos diferentes (1ª, 4ª, 7ª... na primeira, e assim por diante).
+  // Com poucas, todas as fileiras mostram todas as fotos, começando de pontos diferentes para não alinharem.
+  const rows =
+    fotos.length >= CATALOGO_ROWS * MIN_PHOTOS_PER_ROW
+      ? Array.from({ length: CATALOGO_ROWS }, (_, r) => fotos.filter((_src, i) => i % CATALOGO_ROWS === r))
+      : fotos.length === 0
+        ? []
+        : Array.from({ length: CATALOGO_ROWS }, (_, r) => {
+            const start = Math.round((r * fotos.length) / CATALOGO_ROWS)
+            return [...fotos.slice(start), ...fotos.slice(0, start)]
+          })
+
+  const selectCategory = (i: number) => {
+    setActive(i)
+    setAutoRotate(false)
+  }
+
+  return (
+    <>
+      <div className="text-center mb-16">
+        <p className="reveal subtitle-track text-green-700 mb-4">Nosso trabalho</p>
+        <h2 className="reveal delay-1 editorial-title text-3xl md:text-5xl lg:text-6xl text-green-900">
+          <span key={categoria.nome} className="catalogo-fade inline-block">
+            {categoria.nome}
+          </span>
+        </h2>
+        <div className="reveal delay-2 separator mx-auto mt-8" />
+        <div role="tablist" aria-label="Categorias do catálogo" className="reveal delay-2 mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2">
+          {catalogoCategorias.map((c, i) => (
+            <button
+              key={c.nome}
+              type="button"
+              role="tab"
+              aria-selected={i === active}
+              onClick={() => selectCategory(i)}
+              className={`subtitle-track transition-colors duration-300 underline-offset-8 decoration-1 ${i === active ? 'text-green-900 underline' : 'text-green-700 hover:text-green-900'}`}
+            >
+              {c.nome}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div
+        className="reveal"
+        onPointerDown={() => setAutoRotate(false)}
+        onPointerEnter={(e) => e.pointerType === 'mouse' && setHovering(true)}
+        onPointerLeave={() => setHovering(false)}
+      >
+        {rows.map((fotos, r) => (
+          <CatalogoRow key={`${categoria.nome}-${r}`} title={categoria.nome} photos={fotos} reverse={r === 1} />
+        ))}
+      </div>
+    </>
   )
 }
 
@@ -133,14 +270,16 @@ function App() {
             <img
               src={Logo}
               alt="Maria Flor"
-              className={`transition-all duration-500 h-16 ${scrolled ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+              width={59}
+              height={64}
+              className={`transition-all duration-500 h-16 w-auto ${scrolled ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
             />
           </a>
 
           <nav className="hidden md:flex items-center gap-10">
             <a href="#sobre" className={`nav-link ${scrolled ? 'text-green-800' : 'text-white'}`}>Sobre</a>
             <a href="#servicos" className={`nav-link ${scrolled ? 'text-green-800' : 'text-white'}`}>Serviços</a>
-            <a href="#portfolio" className={`nav-link ${scrolled ? 'text-green-800' : 'text-white'}`}>Portfólio</a>
+            <a href="#catalogo" className={`nav-link ${scrolled ? 'text-green-800' : 'text-white'}`}>Catálogo</a>
             <a href="#localizacao" className={`nav-link ${scrolled ? 'text-green-800' : 'text-white'}`}>Localização</a>
             <a href="#contato" className={`nav-link ${scrolled ? 'text-green-800' : 'text-white'}`}>Contato</a>
           </nav>
@@ -148,6 +287,7 @@ function App() {
           {/* Hamburger */}
           <button
             onClick={() => setMenuOpen(true)}
+            aria-label="Abrir menu"
             className={`md:hidden transition ${scrolled ? 'text-green-800' : 'text-white'}`}
           >
             <Menu size={26} strokeWidth={1} />
@@ -157,6 +297,14 @@ function App() {
 
       {/* clip-path recorta o vídeo fixo: ele fica parado e o conteúdo rola por cima */}
       <section id="hero" className="relative h-svh w-full overflow-hidden bg-black [clip-path:inset(0)]">
+        {/* Poster também como <img>: o navegador prioriza o download e mede o carregamento (LCP) por ele.
+            O vídeo fica por cima e cobre a imagem quando começa a tocar. */}
+        <img
+          src={heroPoster}
+          alt=""
+          fetchPriority="high"
+          className="fixed inset-0 h-svh w-full object-cover"
+        />
         <video
           className="fixed inset-0 h-svh w-full object-cover"
           autoPlay
@@ -167,6 +315,8 @@ function App() {
           poster={heroPoster}
           aria-hidden="true"
         >
+          {/* No celular, versão em 540p (3,8 MB em vez de 7,4 MB) */}
+          <source media="(max-width: 767px)" src={heroVideoMobile} type="video/mp4" />
           <source src={heroVideoMp4} type="video/mp4" />
         </video>
 
@@ -175,7 +325,7 @@ function App() {
 
         <div className="relative z-10 h-full flex items-center justify-center px-6">
           <h1 className="hero-text-animate w-[85vw] md:w-[70vw] max-w-5xl">
-            <img src={logoVideo} alt="Maria Flor Floricultura" className="w-full h-auto brightness-0 invert" />
+            <img src={logoVideo} alt="Maria Flor Floricultura" width={1062} height={277} className="w-full h-auto brightness-0 invert" />
           </h1>
         </div>
 
@@ -186,7 +336,7 @@ function App() {
 
       <section className="py-28 md:py-36 px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <p className="reveal subtitle-track text-green-600 mb-6">Bem-vindos</p>
+          <p className="reveal subtitle-track text-green-700 mb-6">Bem-vindos</p>
           <h2 className="reveal delay-1 editorial-title text-3xl md:text-5xl lg:text-6xl text-green-900 leading-tight">
             Um ateliê floral dedicado a criar
             <em className="italic font-light"> mundos sensoriais </em>
@@ -204,17 +354,19 @@ function App() {
               <img
                 src={fachada}
                 alt="Entrada da floricultura Maria Flor"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-[500px] md:h-[650px] object-cover"
               />
             </div>
 
             {/* Text */}
             <div className="reveal-right">
-              <p className="subtitle-track text-green-600 mb-4">Sobre Nós</p>
-              <h3 className="editorial-title text-3xl md:text-5xl text-green-900 mb-8 leading-tight">
+              <p className="subtitle-track text-green-700 mb-4">Sobre Nós</p>
+              <h2 className="editorial-title text-3xl md:text-5xl text-green-900 mb-8 leading-tight">
                 Arte, natureza e<br />
                 <em className="italic font-light">paixão pelas flores</em>
-              </h3>
+              </h2>
               <div className="separator mb-8" />
               <p className="text-green-700 leading-relaxed mb-6 font-light">
                 Na Maria Flor, dedicamo-nos a transformar momentos em memórias inesquecíveis.
@@ -234,22 +386,15 @@ function App() {
         </div>
       </section>
 
-      <div className="overflow-hidden py-10 border-y border-green-200">
+      {/* Faixa decorativa: texto via CSS (deco-text) para não entrar na leitura de tela nem na checagem de contraste */}
+      <div className="overflow-hidden py-10 border-y border-green-200" aria-hidden="true">
         <div className="marquee-track whitespace-nowrap flex items-center gap-12">
           {[...Array(2)].map((_, i) => (
             <span key={i} className="flex items-center gap-12">
-              <span className="editorial-title text-4xl md:text-6xl text-green-800/20">Buquês</span>
-              <span className="text-green-600/30">✦</span>
-              <span className="editorial-title text-4xl md:text-6xl text-green-800/20">Decoração</span>
-              <span className="text-green-600/30">✦</span>
-              <span className="editorial-title text-4xl md:text-6xl text-green-800/20">Eventos</span>
-              <span className="text-green-600/30">✦</span>
-              <span className="editorial-title text-4xl md:text-6xl text-green-800/20">Jardinagem</span>
-              <span className="text-green-600/30">✦</span>
-              <span className="editorial-title text-4xl md:text-6xl text-green-800/20">Casamentos</span>
-              <span className="text-green-600/30">✦</span>
-              <span className="editorial-title text-4xl md:text-6xl text-green-800/20">Arranjos</span>
-              <span className="text-green-600/30">✦</span>
+              {['Buquês', 'Decoração', 'Eventos', 'Jardinagem', 'Casamentos', 'Arranjos'].flatMap((word) => [
+                <span key={word} className="deco-text editorial-title text-4xl md:text-6xl text-green-800/20" data-text={word} />,
+                <span key={`${word}-sep`} className="deco-text text-green-600/30" data-text="✦" />,
+              ])}
             </span>
           ))}
         </div>
@@ -258,10 +403,10 @@ function App() {
       <section id="servicos" className="py-28 md:py-36">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="text-center mb-20">
-            <p className="reveal subtitle-track text-green-600 mb-4">O que fazemos</p>
-            <h3 className="reveal delay-1 editorial-title text-3xl md:text-5xl lg:text-6xl text-green-900">
+            <p className="reveal subtitle-track text-green-700 mb-4">O que fazemos</p>
+            <h2 className="reveal delay-1 editorial-title text-3xl md:text-5xl lg:text-6xl text-green-900">
               Nossos Serviços
-            </h3>
+            </h2>
             <div className="reveal delay-2 separator mx-auto mt-8" />
           </div>
 
@@ -271,14 +416,18 @@ function App() {
               <img
                 src={buquePersonalizado}
                 alt="Buquês Personalizados"
+                width={1200}
+                height={1600}
+                loading="lazy"
+                decoding="async"
                 className="block w-full h-auto"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-green-900/70 via-transparent to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
                 <p className="subtitle-track text-white/70 mb-3">01</p>
-                <h4 className="editorial-title text-2xl md:text-4xl text-white mb-3">
+                <h3 className="editorial-title text-2xl md:text-4xl text-white mb-3">
                   Buquês Personalizados
-                </h4>
+                </h3>
                 <p className="text-white/70 font-light text-sm md:text-base max-w-md">
                   Crie o buquê ideal com flores frescas e cores à sua escolha.
                   Cada arranjo é único, feito com carinho e atenção aos detalhes.
@@ -287,22 +436,19 @@ function App() {
             </div>
 
             <div className="reveal delay-2 group relative overflow-hidden rounded-sm md:min-h-[350px]">
-              <AutoCarousel
+              <PanImage
+                src={cesta}
                 alt="Cestas decoradas"
-                className="h-[350px] md:absolute md:inset-0 md:h-full"
-                slides={[
-                  { src: cesta1, position: 'center 70%' },
-                  { src: cesta2, position: 'center 80%' },
-                  { src: cesta3, position: 'center 85%' },
-                  { src: cesta4, position: 'center 80%' },
-                ]}
+                restPosition="center 85%"
+                loading="lazy"
+                className="w-full h-[350px] md:absolute md:inset-0 md:h-full"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-green-900/70 via-transparent to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-8">
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-green-900/70 via-transparent to-transparent" />
+              <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-8">
                 <p className="subtitle-track text-white/70 mb-3">02</p>
-                <h4 className="editorial-title text-2xl md:text-3xl text-white mb-2">
+                <h3 className="editorial-title text-2xl md:text-3xl text-white mb-2">
                   Cestas decoradas
-                </h4>
+                </h3>
                 <p className="text-white/70 font-light text-sm max-w-sm">
                   Cestas feitas com carinho e sob medida para cada cliente.
                 </p>
@@ -310,17 +456,18 @@ function App() {
             </div>
 
             <div className="reveal delay-3 group relative overflow-hidden rounded-sm md:min-h-[350px]">
-              <img
+              <PanImage
                 src={jardinagem}
                 alt="Plantas & Jardinagem"
-                className="w-full h-[350px] object-cover md:absolute md:inset-0 md:h-full"
+                loading="lazy"
+                className="w-full h-[350px] md:absolute md:inset-0 md:h-full"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-green-900/70 via-transparent to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-8">
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-green-900/70 via-transparent to-transparent" />
+              <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-8">
                 <p className="subtitle-track text-white/70 mb-3">03</p>
-                <h4 className="editorial-title text-2xl md:text-3xl text-white mb-2">
+                <h3 className="editorial-title text-2xl md:text-3xl text-white mb-2">
                   Plantas & Jardinagem
-                </h4>
+                </h3>
                 <p className="text-white/70 font-light text-sm max-w-sm">
                   Plantas ornamentais e dicas de cultivo para seu espaço verde.
                 </p>
@@ -333,14 +480,17 @@ function App() {
       <section className="bg-green-900 py-28 md:py-36 relative overflow-hidden">
 
         <div className="absolute inset-0 opacity-5">
-          <img src={buque} alt="" className="w-full h-full object-cover" />
+          <img src={buque} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
         </div>
 
         <div className="relative max-w-4xl mx-auto px-6 text-center">
           <div className="reveal">
-            <span className="quote-mark relative inline-block" style={{ position: 'relative', top: 0, left: 0, opacity: 0.2 }}>
-              &ldquo;
-            </span>
+            <span
+              aria-hidden="true"
+              className="deco-text quote-mark relative inline-block"
+              data-text="“"
+              style={{ position: 'relative', top: 0, left: 0, opacity: 0.2 }}
+            />
             <blockquote className="editorial-title text-2xl md:text-4xl lg:text-5xl text-white/90 leading-snug mt-[-2rem]">
               Você colocou seu coração na nossa visão…
               <em className="italic font-light block mt-2">
@@ -348,45 +498,14 @@ function App() {
               </em>
             </blockquote>
             <div className="separator bg-white/30 mx-auto mt-10 mb-6" />
-            <p className="subtitle-track text-white/50">— Cliente Maria Flor</p>
+            <p className="subtitle-track text-white/70">— Cliente Maria Flor</p>
           </div>
         </div>
       </section>
 
-      <section id="portfolio" className="py-28 md:py-36">
+      <section id="catalogo" className="py-28 md:py-36">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <div className="text-center mb-16">
-            <p className="reveal subtitle-track text-green-600 mb-4">Nosso trabalho</p>
-            <h3 className="reveal delay-1 editorial-title text-3xl md:text-5xl lg:text-6xl text-green-900">
-              Portfólio
-            </h3>
-            <div className="reveal delay-2 separator mx-auto mt-8" />
-          </div>
-
-          <div className="reveal-scale gallery-scroll">
-            {[entradaBackground, fachada, buque, evento, vaso, bannerNoiva].map((img, i) => (
-              <div key={i} className="img-zoom rounded-sm overflow-hidden" style={{ minWidth: '320px' }}>
-                <img
-                  src={img}
-                  alt={`Portfólio ${i + 1}`}
-                  className="w-80 h-[450px] object-cover"
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* Second row - staggered grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8">
-            {[vaso, entradaBackground, buque, fachada, evento, bannerNoiva].map((img, i) => (
-              <div key={i} className={`reveal delay-${(i % 4) + 1} img-zoom rounded-sm overflow-hidden`}>
-                <img
-                  src={img}
-                  alt={`Galeria ${i + 1}`}
-                  className={`w-full object-cover ${i % 3 === 0 ? 'h-72 md:h-96' : 'h-56 md:h-72'}`}
-                />
-              </div>
-            ))}
-          </div>
+          <Catalogo />
         </div>
       </section>
 
@@ -395,6 +514,8 @@ function App() {
           ref={noivaImgRef}
           src={bannerNoiva}
           alt="Banner"
+          loading="lazy"
+          decoding="async"
           className="parallax-img w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-green-900/30 to-green-900/50" />
@@ -402,9 +523,9 @@ function App() {
           <p className="reveal subtitle-track text-white/70 mb-4">
             Tem a visão mas não tem tempo?
           </p>
-          <h3 className="reveal delay-1 editorial-title text-3xl md:text-5xl lg:text-6xl text-white max-w-3xl leading-tight">
+          <h2 className="reveal delay-1 editorial-title text-3xl md:text-5xl lg:text-6xl text-white max-w-3xl leading-tight">
             Nós cuidamos de cada detalhe para você.
-          </h3>
+          </h2>
           <a href="#contato" className="reveal delay-2 btn-elegant btn-elegant-light mt-10">
             Fale conosco
           </a>
@@ -416,13 +537,13 @@ function App() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
 
             <div className="reveal-left order-2 md:order-1">
-              <p className="subtitle-track text-green-600 mb-4">Como trabalhamos</p>
-              <h3 className="editorial-title text-3xl md:text-5xl text-green-900 mb-8 leading-tight">
+              <p className="subtitle-track text-green-700 mb-4">Como trabalhamos</p>
+              <h2 className="editorial-title text-3xl md:text-5xl text-green-900 mb-8 leading-tight">
                 Seus arranjos devem
                 <em className="italic font-light block">
                   contar a sua história.
                 </em>
-              </h3>
+              </h2>
               <div className="separator mb-8" />
               <p className="text-green-700 leading-relaxed mb-6 font-light">
                 Começamos com uma conversa — do tipo em que perguntamos demais
@@ -442,10 +563,10 @@ function App() {
                   { num: '04', title: 'Entrega & Encanto', desc: 'Entregamos a emoção na sua porta.' },
                 ].map((step, i) => (
                   <div key={i} className={`reveal delay-${i + 1} flex items-start gap-5`}>
-                    <span className="editorial-title text-3xl text-green-600/40">{step.num}</span>
+                    <span aria-hidden="true" className="deco-text editorial-title text-3xl text-green-600/40" data-text={step.num} />
                     <div>
-                      <h5 className="font-medium text-green-800 mb-1">{step.title}</h5>
-                      <p className="text-green-600 font-light text-sm">{step.desc}</p>
+                      <h3 className="font-medium text-green-800 mb-1">{step.title}</h3>
+                      <p className="text-green-700 font-light text-sm">{step.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -457,15 +578,9 @@ function App() {
                 <img
                   src={buque}
                   alt="Processo criativo"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-[500px] md:h-[700px] object-cover"
-                />
-              </div>
-
-              <div className="hidden md:block img-zoom absolute -bottom-8 -left-12 w-48 h-64 rounded-sm overflow-hidden shadow-2xl border-4 border-green-50">
-                <img
-                  src={vaso}
-                  alt="Detalhe"
-                  className="w-full h-full object-cover"
                 />
               </div>
             </div>
@@ -477,14 +592,14 @@ function App() {
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             {[
-              { icon: '🚚', title: 'Entrega Expressa', desc: 'Entrega até as 18h para pedidos feitos até o meio-dia.' },
+              { icon: '🚚', title: 'Entrega Expressa', desc: 'Entrega até as 18h — receba em até 2h.' },
               { icon: '💳', title: 'Formas de Pagamento', desc: 'Crédito, débito, desconto em grandes compras à vista.' },
               { icon: '📱', title: 'WhatsApp', desc: 'Compre também pelo WhatsApp de forma prática e rápida.' },
             ].map((item, i) => (
               <div key={i} className={`reveal delay-${i + 1} flex flex-col items-center`}>
                 <span className="text-3xl mb-4">{item.icon}</span>
-                <h5 className="subtitle-track text-green-800 mb-2 text-xs">{item.title}</h5>
-                <p className="text-green-600 font-light text-sm max-w-xs">{item.desc}</p>
+                <h3 className="subtitle-track text-green-800 mb-2 text-xs">{item.title}</h3>
+                <p className="text-green-700 font-light text-sm max-w-xs">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -495,12 +610,16 @@ function App() {
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
             <div className="reveal-left">
-              <p className="subtitle-track text-green-600 mb-4">Visite-nos</p>
-              <h3 className="editorial-title text-3xl md:text-5xl text-green-900 mb-8 leading-tight">
+              <p className="subtitle-track text-green-700 mb-4">Visite-nos</p>
+              <h2 className="editorial-title text-3xl md:text-5xl text-green-900 mb-8 leading-tight">
                 Como Chegar
-              </h3>
+              </h2>
               <div className="separator mb-8" />
               <div className="space-y-5 text-green-700 font-light">
+                <div className="flex items-start gap-3">
+                  <Truck size={18} strokeWidth={1} className="mt-1 text-green-600 shrink-0" />
+                  <p>Estamos em Ipatinga, entregamos em Ipaba, Timóteo e Coronel Fabriciano</p>
+                </div>
                 <div className="flex items-start gap-3">
                   <MapPin size={18} strokeWidth={1} className="mt-1 text-green-600 shrink-0" />
                   <p>
@@ -533,6 +652,8 @@ function App() {
               <div className="aspect-[4/3] rounded-sm overflow-hidden shadow-lg">
                 <iframe
                   title="Mapa da Floricultura"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3761.455033985166!2d-42.525495199999995!3d-19.479049300000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xb000420e11f849%3A0x93652ec6022392eb!2sMaria%20Flor!5e0!3m2!1spt-BR!2sbr!4v1753731458409!5m2!1spt-BR!2sbr"
                   allowFullScreen
                   className="w-full h-full"
@@ -544,23 +665,20 @@ function App() {
       </section>
 
       <section id="contato" className="bg-green-900 py-28 md:py-36 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <img src={entradaBackground} alt="" className="w-full h-full object-cover" />
-        </div>
         <div className="relative max-w-3xl mx-auto px-6 text-center">
-          <p className="reveal subtitle-track text-white/60 mb-6">Pronta para encantar?</p>
-          <h3 className="reveal delay-1 editorial-title text-3xl md:text-5xl lg:text-6xl text-white leading-tight">
+          <p className="reveal subtitle-track text-white/70 mb-6">Pronta para encantar?</p>
+          <h2 className="reveal delay-1 editorial-title text-3xl md:text-5xl lg:text-6xl text-white leading-tight">
             Cada flor conta uma história.
             <em className="italic font-light block mt-2">Qual será a sua?</em>
-          </h3>
+          </h2>
           <div className="reveal delay-2 separator bg-white/30 mx-auto mt-10 mb-10" />
-          <p className="reveal delay-2 text-white/60 font-light mb-10 max-w-lg mx-auto">
+          <p className="reveal delay-2 text-white/70 font-light mb-10 max-w-lg mx-auto">
             Entre em contato e vamos criar juntas o arranjo perfeito
             para o seu momento especial.
           </p>
             <a
               href={`https://wa.me/553196964905?text=${mensagem}`}
-              className="btn-elegant inline-block mt-10"
+              className="btn-elegant btn-elegant-light inline-block mt-10"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -585,6 +703,7 @@ function App() {
       {/* ═══ Back to Top ═══ */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        aria-label="Voltar ao topo"
         className={`fixed bottom-24 right-8 z-30 p-3 rounded-full bg-green-800 text-white shadow-lg transition-all duration-500 hover:bg-green-700 ${scrolled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}
       >
         <ArrowUp size={18} strokeWidth={1.5} />
