@@ -9,6 +9,9 @@ lerna-debug.log*
 
 node_modules
 dist
+# vídeos brutos (acima do limite de 100 MB do GitHub); o site usa src/assets/hero.mp4/.webm
+*.mov
+*.MOV
 dist-ssr
 *.local
 

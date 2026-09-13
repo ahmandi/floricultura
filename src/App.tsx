@@ -1,24 +1,25 @@
 import { useEffect, useRef, useState } from 'react'
 import Logo from './assets/logo-sm.png'
 import entradaBackground from './assets/entrada.jpeg'
-import interior from './assets/interiormariaflor.png'
+import fachada from './assets/fachada.jpg'
 import buque from './assets/bluetterflies.png'
+import buquePersonalizado from './assets/buque_personalizado.jpg'
 import vaso from './assets/vasojardim.png'
+import jardinagem from './assets/jardinagem.jpg'
 import evento from './assets/evento.png'
-import bannerBuque from './assets/bannerbuque1.png'
+import cesta1 from './assets/cesta_1.jpg'
+import cesta2 from './assets/cesta_2.jpg'
+import cesta3 from './assets/cesta_3.jpg'
+import cesta4 from './assets/cesta_4.jpg'
 import bannerNoiva from './assets/buquenoiva.png'
-
-
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { Pagination, Autoplay, EffectFade } from 'swiper/modules'
-
-import 'swiper/css'
-import 'swiper/css/effect-fade'
-import 'swiper/css/pagination'
+import heroVideoMp4 from './assets/hero.mp4'
+import heroPoster from './assets/hero-poster.jpg'
+import logoVideo from './assets/logo_video_svg.svg'
 
 import { Menu, X, Instagram, Phone, MapPin, Mail, ArrowUp, ChevronDown } from 'lucide-react'
 
 import Footer from './Footer'
+import AutoCarousel from './AutoCarousel'
 
 function WhatsAppIcon({ size = 28 }) {
   return (
@@ -107,18 +108,14 @@ function MobileMenu({ isOpen, onClose }) {
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const heroImgRef = useRef(null)
   const noivaImgRef = useRef(null)
-  const buqueImgRef = useRef(null)
   const mensagem = encodeURIComponent(
           "Olá! Vim pelo site da floricultura e gostaria de realizar um pedido."
         );
 
   useScrollReveal()
 
-  useParallax(heroImgRef, 0.25, 80)
   useParallax(noivaImgRef, 0.15, 50, -30)
-  useParallax(buqueImgRef, 0.45, 50)
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 80)
@@ -136,7 +133,7 @@ function App() {
             <img
               src={Logo}
               alt="Maria Flor"
-              className={`transition-all duration-500 h-16`}
+              className={`transition-all duration-500 h-16 ${scrolled ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
             />
           </a>
 
@@ -158,47 +155,28 @@ function App() {
         </div>
       </header>
 
-      <section id="hero" className="relative h-screen w-full overflow-hidden">
-        <div className="parallax-container absolute inset-0">
-          <Swiper
-            modules={[Pagination, Autoplay, EffectFade]}
-            effect="fade"
-            pagination={{ clickable: true }}
-            autoplay={{ delay: 5000, disableOnInteraction: false }}
-            loop
-            speed={1200}
-            className="h-full w-full"
-          >
-            <SwiperSlide>
-              <img ref={heroImgRef} src={entradaBackground} alt="Entrada" className="parallax-img object-cover w-full h-full scale-110" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={interior} alt="Interior" className="object-cover w-full h-full scale-110" />
-            </SwiperSlide>
-            <SwiperSlide>
-              <img src={bannerBuque} alt="Noiva" className="object-cover w-full h-full scale-110" />
-            </SwiperSlide>
-          </Swiper>
-        </div>
+      {/* clip-path recorta o vídeo fixo: ele fica parado e o conteúdo rola por cima */}
+      <section id="hero" className="relative h-svh w-full overflow-hidden bg-black [clip-path:inset(0)]">
+        <video
+          className="fixed inset-0 h-svh w-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster={heroPoster}
+          aria-hidden="true"
+        >
+          <source src={heroVideoMp4} type="video/mp4" />
+        </video>
 
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-green-900/40 via-green-900/20 to-green-900/60 z-10" />
+        {/* Filtro escuro */}
+        <div className="absolute inset-0 bg-black/40 z-10" />
 
-        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
-          <p className="subtitle-track text-white/80 mb-6 hero-text-animate">
-            Floricultura & Ateliê Floral
-          </p>
-          <h1 className="editorial-title text-white text-5xl md:text-7xl lg:text-8xl hero-text-animate-delay-1">
-            Maria Flor
+        <div className="relative z-10 h-full flex items-center justify-center px-6">
+          <h1 className="hero-text-animate w-[85vw] md:w-[70vw] max-w-5xl">
+            <img src={logoVideo} alt="Maria Flor Floricultura" className="w-full h-auto brightness-0 invert" />
           </h1>
-          <div className="separator bg-white/50 my-8 hero-text-animate-delay-2" />
-          <p className="hero-text-animate-delay-2 text-white/80 font-light text-base md:text-lg max-w-lg leading-relaxed">
-            Flores frescas, arranjos artesanais e decoração floral
-            para transformar seus momentos em memórias inesquecíveis.
-          </p>
-          <a href="#servicos" className="btn-elegant btn-elegant-light mt-10 hero-text-animate-delay-3">
-            Conheça nossos serviços
-          </a>
         </div>
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 text-white/60 animate-bounce">
@@ -224,8 +202,8 @@ function App() {
 
             <div className="reveal-left img-zoom rounded-sm overflow-hidden">
               <img
-                src={interior}
-                alt="Interior da floricultura Maria Flor"
+                src={fachada}
+                alt="Entrada da floricultura Maria Flor"
                 className="w-full h-[500px] md:h-[650px] object-cover"
               />
             </div>
@@ -289,15 +267,12 @@ function App() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
 
-            <div className="reveal delay-1 img-zoom group relative overflow-hidden rounded-sm md:row-span-2">
-              <div className="relative w-full h-[400px] md:h-full">
-                <img
-                  ref={buqueImgRef}
-                  src={buque}
-                  alt="Buquês Personalizados"
-                  className="parallax-img absolute inset-x-0 -top-[15%] w-full h-[130%] object-cover"
-                />
-              </div>
+            <div className="reveal delay-1 group relative overflow-hidden rounded-sm md:row-span-2">
+              <img
+                src={buquePersonalizado}
+                alt="Buquês Personalizados"
+                className="block w-full h-auto"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-green-900/70 via-transparent to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
                 <p className="subtitle-track text-white/70 mb-3">01</p>
@@ -311,29 +286,34 @@ function App() {
               </div>
             </div>
 
-            <div className="reveal delay-2 img-zoom group relative overflow-hidden rounded-sm">
-              <img
-                src={evento}
-                alt="Decoração de Eventos"
-                className="w-full h-[350px] object-cover"
+            <div className="reveal delay-2 group relative overflow-hidden rounded-sm md:min-h-[350px]">
+              <AutoCarousel
+                alt="Cestas decoradas"
+                className="h-[350px] md:absolute md:inset-0 md:h-full"
+                slides={[
+                  { src: cesta1, position: 'center 70%' },
+                  { src: cesta2, position: 'center 80%' },
+                  { src: cesta3, position: 'center 85%' },
+                  { src: cesta4, position: 'center 80%' },
+                ]}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-green-900/70 via-transparent to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-8">
                 <p className="subtitle-track text-white/70 mb-3">02</p>
                 <h4 className="editorial-title text-2xl md:text-3xl text-white mb-2">
-                  Decoração de Eventos
+                  Cestas decoradas
                 </h4>
                 <p className="text-white/70 font-light text-sm max-w-sm">
-                  Elegância e perfume para casamentos, festas e confraternizações.
+                  Cestas feitas com carinho e sob medida para cada cliente.
                 </p>
               </div>
             </div>
 
-            <div className="reveal delay-3 img-zoom group relative overflow-hidden rounded-sm">
+            <div className="reveal delay-3 group relative overflow-hidden rounded-sm md:min-h-[350px]">
               <img
-                src={vaso}
+                src={jardinagem}
                 alt="Plantas & Jardinagem"
-                className="w-full h-[350px] object-cover"
+                className="w-full h-[350px] object-cover md:absolute md:inset-0 md:h-full"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-green-900/70 via-transparent to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-8">
@@ -384,7 +364,7 @@ function App() {
           </div>
 
           <div className="reveal-scale gallery-scroll">
-            {[entradaBackground, interior, buque, evento, vaso, bannerNoiva].map((img, i) => (
+            {[entradaBackground, fachada, buque, evento, vaso, bannerNoiva].map((img, i) => (
               <div key={i} className="img-zoom rounded-sm overflow-hidden" style={{ minWidth: '320px' }}>
                 <img
                   src={img}
@@ -397,7 +377,7 @@ function App() {
 
           {/* Second row - staggered grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8">
-            {[vaso, entradaBackground, buque, interior, evento, bannerNoiva].map((img, i) => (
+            {[vaso, entradaBackground, buque, fachada, evento, bannerNoiva].map((img, i) => (
               <div key={i} className={`reveal delay-${(i % 4) + 1} img-zoom rounded-sm overflow-hidden`}>
                 <img
                   src={img}

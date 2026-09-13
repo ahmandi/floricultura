@@ -1,6 +1,7 @@
-@import "tailwindcss";
-
+/* URL imports precisam vir antes do tailwindcss, que é expandido em regras CSS */
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Josefin+Sans:wght@300;400;500;600&display=swap');
+
+@import "tailwindcss";
 
 @theme {
   --color-green-50: oklch(98.2% .018 155.826);
@@ -182,18 +183,6 @@ body {
 }
 
 /* ─── Swiper Overrides ─── */
-.swiper-pagination-bullet {
-  background: white !important;
-  opacity: 0.5 !important;
-  width: 10px !important;
-  height: 10px !important;
-}
-
-.swiper-pagination-bullet-active {
-  opacity: 1 !important;
-  background: white !important;
-}
-
 /* ─── CTA Button ─── */
 .btn-elegant {
   font-family: var(--font-sans);
