@@ -295,9 +295,11 @@ body {
 }
 
 /* ─── Hero Text Fade In ─── */
+/* Começa em 0.01 e não em 0: elementos com opacidade zero são ignorados na medição do LCP
+   (o Lighthouse/PageSpeed deixava a nota de Performance em branco com "NO_LCP") */
 @keyframes heroFadeIn {
   from {
-    opacity: 0;
+    opacity: 0.01;
     transform: translateY(30px);
   }
   to {
