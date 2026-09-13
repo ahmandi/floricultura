@@ -9,6 +9,10 @@
     <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
+    <!-- Logo do topo é o maior elemento da primeira tela (LCP): baixa junto com o HTML, sem esperar o JavaScript.
+         O Vite troca o caminho pelo arquivo final com hash, o mesmo usado no App.tsx. -->
+    <link rel="preload" as="image" href="/src/assets/logo_video_svg.svg" type="image/svg+xml" fetchpriority="high" />
+
     <!-- Fontes: conexão antecipada e carregamento sem bloquear a primeira exibição da página -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
